@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+   <h1>Flask-SocketIO Test</h1>
+   <p>Async mode is: <b>{{ async_mode }}</b></p>
+   <p>Average ping/pong latency: <b><span id="ping-pong"></span>ms</b></p>
+         <title>Bloco 5R</title>
+         <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
+         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
+         <script type="text/javascript" charset="utf-8">
+             $(document).ready(function() {
+                 // Use a "/test" namespace.
+                 // An application can open a connection on multiple namespaces, and
+                 // Socket.IO will multiplex all those connections on a single
+                 // physical channel. If you don't care about multiple channels, you
+                 // can set the namespace to an empty string.
+                 namespace = '/test';
+                 // Connect to the Socket.IO server.
+                 // The connection URL has the following format:
+                 //     http[s]://<domain>:<port>[/<namespace>]
+                 var socket = io.connect(location.protocol + '//' + document.domain + ':' + '80' + namespace);
+                 // Event handler for new connections.
+                 // The callback function is invoked when a connection with the
+                 // server is established.
+                 socket.on('connect', function() {
+                     socket.emit('my_event', {data: 'I\'m connected!'});
+                 });
+                 // Event handler for server sent data.
+                 // The callback function is invoked whenever the server emits data
+                 // to the client. The data is then displayed in the "Received"
+                 // section of the page.
+                 socket.on('my_response', function(msg) {
+                     $('#log').append('<br>' + $('<div/>').text('Received #' + msg.count + ': ' + msg.data).html());
+                 });
+                 // Interval function that tests message latency by sending a "ping"
+                 // message. The server then responds with a "pong" message and the
+                 // round trip time is measured.
+                 var ping_pong_times = [];
+                 var start_time;
+                 window.setInterval(function() {
+                     start_time = (new Date).getTime();
+                     socket.emit('my_ping');
+                 }, 1000);
+                 // Handler for the "pong" message. When the pong is received, the
+                 // time from the ping is stored, and the average of the last 30
+                 // samples is average and displayed.
+                 socket.on('my_pong', function() {
+                     var latency = (new Date).getTime() - start_time;
+                     ping_pong_times.push(latency);
+                     ping_pong_times = ping_pong_times.slice(-30); // keep last 30 samples
+                     var sum = 0;
+                     for (var i = 0; i < ping_pong_times.length; i++)
+                        sum += ping_pong_times[i];
+                     $('#ping-pong').text(Math.round(10 * sum / ping_pong_times.length) / 10);
+                 });
+                 // Handlers for the different forms in the page.
+                 // These accept data from the user and send it to the server in a
+                 // variety of ways
+                 $('form#emit').submit(function(event) {
+                     socket.emit('my_event', {data: $('#emit_data').val()});
+                     return false;
+                 });
+                 $('form#broadcast').submit(function(event) {
+                     socket.emit('my_broadcast_event', {data: $('#broadcast_data').val()});
+                     return false;
+                 });
+                 $('form#join').submit(function(event) {
+                     socket.emit('join', {room: $('#join_room').val()});
+                     return false;
+                 });
+                 $('form#leave').submit(function(event) {
+                     socket.emit('leave', {room: $('#leave_room').val()});
+                     return false;
+                 });
+                 $('form#send_room').submit(function(event) {
+                     socket.emit('my_room_event', {room: $('#room_name').val(), data: $('#room_data').val()});
+                     return false;
+                 });
+                 $('form#close').submit(function(event) {
+                     socket.emit('close_room', {room: $('#close_room').val()});
+                     return false;
+                 });
+                 $('form#disconnect').submit(function(event) {
+                     socket.emit('disconnect_request');
+                     return false;
+                 });
+             });
+         </script>
+         <script>
+            setInterval(changecolor,10,'{{state}}');
+            socket.on('my event', function changecolor(int)
+            {
+               if(int == '1'){
+                  document.getElementById("sala316").style.backgroundColor="#ff0000";
+               }
+               else {
+                     document.getElementById("sala316").style.backgroundColor="#00ff00";
+                  }
+               socket.on('my event', {data: 'I\'m connected!'});
+            });
+         </script>
+	<style>
+		.IO_box {
+         display:inline-block;
+         left: 50%;
+         transform: translateX(150%);
+			border: 1.5px solid #b48944;
+			padding: 10px 10px 10px 10px;
+			width: 120px;
+         text-align: center;
+         font-size: 110%;
+		}
+		h1 {
+			font-size: 150%;
+			color: blue;
+			margin: 0 0 10px 0;
+         text-align: center;
+         color: #b48944;
+		}
+		h2 {
+			font-size: 100%;
+			color: #ffffff;
+			margin: 5px 0 5px 0;
+		}
+		p, form, button {
+			font-size: 80%;
+			color: #252525;
+		}
+		.small_text {
+			font-size: 70%;
+			color: #737373;
+		}
+
+      .box{
+	        width:100px;
+	          height:100px;
+      }
+      .littleboxgreen
+      {
+         display:inline-block;
+			padding: 10px 5px 5px 10px;
+			width: 2px;
+         background-color: #00ff00;
+      }
+      .littleboxred
+      {
+         display:inline-block;
+			padding: 10px 5px 5px 10px;
+			width: 2px;
+         background-color: #ff0000;
+      }
+	</style>
+      </head>
+   <body  onload= "changecolor()" style="background-color: #012246">
+      <img src="/static/logo.png" alt="logo" align="middle" style="display:inline-block; transform: translateX(70%);">
+      <br></br>
+      <br>
+      <div ID="sala111" class="IO_box" style="background-color: red">
+          <h2>Sala 5R - 111</h2>
+      </div>
+      <div ID="sala112" class="IO_box" style="background-color: #00ff00">
+          <h2>Sala 5R - 112</h2>
+      </div>
+      <div ID="sala113" class="IO_box" style="background-color: red">
+          <h2>Sala 5R - 113</h2>
+      </div>
+      <div ID="sala114" class="IO_box" style="background-color: red">
+          <h2>Sala 5R - 114</h2>
+      </div>
+      <div ID="sala115" class="IO_box" style="background-color: red">
+          <h2>Sala 5R - 115</h2>
+      </div>
+      <div ID="sala116" class="IO_box" style="background-color: #00ff00">
+          <h2>Sala 5R - 116</h2>
+      </div>
+   </br>
+   <br>
+   <div ID="sala211" class="IO_box" style="background-color: red">
+       <h2>Sala 5R - 211</h2>
+   </div>
+   <div ID="sala212" class="IO_box" style="background-color: #00ff00">
+       <h2>Sala 5R - 212</h2>
+   </div>
+   <div ID="sala213" class="IO_box" style="background-color: #00ff00">
+       <h2>Sala 5R - 213</h2>
+   </div>
+      <div ID="sala214" class="IO_box" style="background-color: red">
+          <h2>Sala 5R - 214</h2>
+      </div>
+      <div ID="sala215" class="IO_box" style="background-color: red">
+          <h2>Sala 5R - 215</h2>
+      </div>
+      <div ID="sala216" class="IO_box" style="background-color: #00ff00">
+          <h2>Sala 5R - 216</h2>
+      </div>
+   </br>
+   <br>
+   <div ID="sala311" class="IO_box" style="background-color: red">
+       <h2>Sala 5R - 311</h2>
+   </div>
+   <div ID="sala312" class="IO_box" style="background-color: red">
+       <h2>Sala 5R - 312</h2>
+   </div>
+   <div ID="sala313" class="IO_box" style="background-color: #00ff00">
+       <h2>Sala 5R - 313</h2>
+   </div>
+      <div ID="sala314" class="IO_box" style="background-color: #00ff00">
+          <h2>Sala 5R - 314</h2>
+      </div>
+      <div ID="sala315" class="IO_box" style="background-color: red">
+          <h2>Sala 5R - 315</h2>
+      </div>
+      <div ID="sala316" class="IO_box" >
+          <h2>Sala 5R - 316</h2>
+      </div>
+      <br>
+      <div style="text-align:left;">
+      <span style="color: #b48944">Sala Ocupada</span>
+      <div class="littleboxred">
+      </div>
+      <br>
+      <div style="text-align:left">
+      <span style="color: #b48944">Sala Disponivel</span>
+      <div class="littleboxgreen">
+      </div>
+      </br>
+      </div>
+   </body>
+</html>
